@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".FolderActivity">
+
+    <!-- App Header (PicPick) -->
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#0A2940"
+        android:gravity="center"
+        android:padding="16dp"
+        android:text="PicPick"
+        android:textColor="@android:color/white"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <!-- Trash Button -->
+    <Button
+        android:id="@+id/btnTrash"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:text="TRASH"
+        android:textStyle="bold"
+        android:textColor="@android:color/white"
+        android:backgroundTint="#B55032"
+        android:layout_marginTop="50dp"
+        android:padding="10dp"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintTop_toBottomOf="@id/tvTitle"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <!-- Skip Button -->
+    <Button
+        android:id="@+id/btnSkip"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:text="SKIP"
+        android:textStyle="bold"
+        android:textColor="@android:color/white"
+        android:backgroundTint="#B55032"
+        android:layout_marginBottom="10dp"
+        android:padding="10dp"
+        app:layout_constraintTop_toBottomOf="@id/btnTrash"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <!-- Keep Button -->
+    <Button
+        android:id="@+id/btnKeep"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:text="KEEP"
+        android:textStyle="bold"
+        android:textColor="@android:color/white"
+        android:backgroundTint="#B55032"
+        android:layout_marginBottom="10dp"
+        android:padding="10dp"
+        app:layout_constraintTop_toBottomOf="@id/btnSkip"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <!-- Stats Button -->
+    <Button
+        android:id="@+id/btnStats"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:text="STATS"
+        android:textStyle="bold"
+        android:textColor="@android:color/white"
+        android:backgroundTint="#B55032"
+        android:layout_marginBottom="10dp"
+        android:padding="10dp"
+        app:layout_constraintTop_toBottomOf="@id/btnKeep"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <!-- Bottom Navigation Bar -->
+    <LinearLayout
+        android:id="@+id/bottomNav"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#0A2940"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:padding="8dp"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <!-- Gallery Button (Left) -->
+        <ImageButton
+            android:id="@+id/btnGallery"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:background="@android:color/transparent"
+            android:contentDescription="Gallery"
+            android:src="@drawable/ic_gallery" />
+
+        <!-- Home Button (Centered) -->
+        <ImageButton
+            android:id="@+id/btnHome"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:background="@android:color/transparent"
+            android:contentDescription="Home"
+            android:src="@drawable/ic_home" />
+
+        <!-- Folder Button (Right, Darker When Active) -->
+        <ImageButton
+            android:id="@+id/btnFolder"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:background="@android:color/transparent"
+            android:contentDescription="Folder"
+            android:src="@drawable/ic_folder_dark" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
