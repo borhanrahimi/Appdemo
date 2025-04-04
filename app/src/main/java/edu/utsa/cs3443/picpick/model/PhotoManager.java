@@ -5,80 +5,83 @@ import android.content.SharedPreferences;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class PhotoManager {
 
-    private static List<Photo> photoList = new ArrayList<>();
+    private static HashMap<String, Photo> photoMap = new HashMap<>();
+    private static HashMap<Photo.Status, List<Photo>> statusMap = new HashMap<>();
     private static boolean isLoaded = false;
 
-    // Load all images from assets folder
     public static void loadPhotos(Context context) {
         if (isLoaded) return;
 
-        photoList.clear();
+        photoMap.clear();
+        int id = 0;
+
         try {
             String[] files = context.getAssets().list("");
-            int id = 0;
             for (String file : files) {
                 if (file.endsWith(".png") || file.endsWith(".jpg") || file.endsWith(".jpeg") || file.endsWith(".webp")) {
-                    photoList.add(new Photo(id++, file, file, Photo.Status.UNASSIGNED));
+                    Photo p = new Photo(id++, file, file, Photo.Status.UNASSIGNED);
+                    photoMap.put(file, p);
                 }
             }
             loadSavedStatuses(context);
+            categorizePhotos();
             isLoaded = true;
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    // Get all photos
+    // Categorize photos by their status
+    private static void categorizePhotos() {
+        statusMap.clear();
+        for (Photo.Status status : Photo.Status.values()) {
+            statusMap.put(status, new ArrayList<>());
+        }
+
+        for (Photo p : photoMap.values()) {
+            statusMap.get(p.getStatus()).add(p);
+        }
+    }
+
     public static List<Photo> getAllPhotos() {
-        return photoList;
+        return new ArrayList<>(photoMap.values());
     }
 
-    // Get only unassigned photos
     public static List<Photo> getUnassignedPhotos() {
-        List<Photo> result = new ArrayList<>();
-        for (Photo p : photoList) {
-            if (p.getStatus() == Photo.Status.UNASSIGNED) {
-                result.add(p);
-            }
-        }
-        return result;
+        return statusMap.getOrDefault(Photo.Status.UNASSIGNED, new ArrayList<>());
     }
 
-    // Get photos by specific status (KEEP, TRASH, SKIP)
     public static List<Photo> getPhotosByStatus(Photo.Status status) {
-        List<Photo> result = new ArrayList<>();
-        for (Photo p : photoList) {
-            if (p.getStatus() == status) {
-                result.add(p);
-            }
-        }
-        return result;
+        return statusMap.getOrDefault(status, new ArrayList<>());
     }
 
-    // Set photo status and save it
+    public static Photo getPhotoByPath(String filePath) {
+        return photoMap.get(filePath);
+    }
+
     public static void setPhotoStatus(Photo photo, Photo.Status newStatus, Context context) {
         photo.setStatus(newStatus);
         saveStatuses(context);
+        categorizePhotos();
     }
 
-    // Save all statuses to SharedPreferences
     public static void saveStatuses(Context context) {
         SharedPreferences prefs = context.getSharedPreferences("photo_statuses", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
-        for (Photo p : photoList) {
+        for (Photo p : photoMap.values()) {
             editor.putString(p.getFilePath(), p.getStatus().name());
         }
         editor.apply();
     }
 
-    // Load saved statuses into photoList
     public static void loadSavedStatuses(Context context) {
         SharedPreferences prefs = context.getSharedPreferences("photo_statuses", Context.MODE_PRIVATE);
-        for (Photo p : photoList) {
+        for (Photo p : photoMap.values()) {
             String saved = prefs.getString(p.getFilePath(), null);
             if (saved != null) {
                 p.setStatus(Photo.Status.valueOf(saved));
@@ -86,15 +89,14 @@ public class PhotoManager {
         }
     }
 
-    // Reset everything (set all to UNASSIGNED)
     public static void resetAll(Context context) {
-        for (Photo p : photoList) {
+        for (Photo p : photoMap.values()) {
             p.setStatus(Photo.Status.UNASSIGNED);
         }
         saveStatuses(context);
+        categorizePhotos();
     }
 
-    // Call this only if user wipes app storage or does a manual reset
     public static void forceReload(Context context) {
         isLoaded = false;
         loadPhotos(context);
