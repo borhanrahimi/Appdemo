@@ -20,6 +20,16 @@
         android:textStyle="bold"
         android:padding="16dp" />
 
+    <TextView
+        android:id="@+id/photoCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Total photos: 0"
+        android:textSize="18sp"
+        android:textColor="#0A2940"
+        android:layout_marginTop="8dp"
+        android:layout_gravity="center_horizontal" />
+
     <!-- Trash Section Title -->
 <!--    <TextView-->
 <!--        android:layout_width="match_parent"-->

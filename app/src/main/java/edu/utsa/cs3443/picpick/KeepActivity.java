@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.GridView;
 import android.widget.ImageButton;
+import android.widget.TextView; // ✅ ADDED
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -22,6 +23,10 @@ public class KeepActivity extends AppCompatActivity {
         GridView gridView = findViewById(R.id.gridKeepImages);
         List<Photo> keepPhotos = PhotoManager.getPhotosByStatus(Photo.Status.KEEP);
         gridView.setAdapter(new ImageAdapter(this, keepPhotos));
+
+        // ✅ Set photo counter text
+        TextView photoCount = findViewById(R.id.photoCount);
+        photoCount.setText("Total photos: " + keepPhotos.size());
 
         gridView.setOnItemClickListener((parent, view, position, id) -> {
             Photo selected = keepPhotos.get(position);

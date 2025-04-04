@@ -21,6 +21,16 @@
         android:background="#0A2940"
         android:textColor="@android:color/white" />
 
+    <TextView
+        android:id="@+id/photoCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Unassigned photos: 0"
+        android:textSize="18sp"
+        android:textColor="#0A2940"
+        android:layout_marginTop="8dp"
+        android:layout_gravity="center_horizontal"/>
+
     <!-- Grid of Images -->
     <GridView
         android:id="@+id/gridGallery"
@@ -33,6 +43,8 @@
         android:padding="12dp"
         android:gravity="center"
         android:stretchMode="columnWidth" />
+
+
 
     <!-- Bottom Navigation Bar -->
     <LinearLayout

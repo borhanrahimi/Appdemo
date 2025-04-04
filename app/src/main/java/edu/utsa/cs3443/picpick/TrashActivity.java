@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.GridView;
 import android.widget.ImageButton;
+import android.widget.TextView;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.List;
@@ -22,6 +24,10 @@ public class TrashActivity extends AppCompatActivity {
         GridView gridView = findViewById(R.id.gridTrashImages);
         List<Photo> trashPhotos = PhotoManager.getPhotosByStatus(Photo.Status.TRASH);
         gridView.setAdapter(new ImageAdapter(this, trashPhotos));
+
+        // ✅ Add total count
+        TextView photoCount = findViewById(R.id.photoCount);
+        photoCount.setText("Total photos: " + trashPhotos.size());
 
         // Click to view full image
         gridView.setOnItemClickListener((parent, view, position, id) -> {

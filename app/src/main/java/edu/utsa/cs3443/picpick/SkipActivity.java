@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.GridView;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -22,6 +23,10 @@ public class SkipActivity extends AppCompatActivity {
         GridView gridView = findViewById(R.id.gridSkipImages);
         List<Photo> skipPhotos = PhotoManager.getPhotosByStatus(Photo.Status.SKIP);
         gridView.setAdapter(new ImageAdapter(this, skipPhotos));
+
+        // ✅ Set total photo count
+        TextView photoCount = findViewById(R.id.photoCount);
+        photoCount.setText("Total photos: " + skipPhotos.size());
 
         gridView.setOnItemClickListener((parent, view, position, id) -> {
             Photo selected = skipPhotos.get(position);
