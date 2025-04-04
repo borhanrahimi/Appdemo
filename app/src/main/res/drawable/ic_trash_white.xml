@@ -3,8 +3,19 @@
     android:height="24dp"
     android:viewportWidth="24"
     android:viewportHeight="24">
+
+    <!-- Trash lid (rounded) -->
     <path
         android:fillColor="#FFFFFF"
-        android:pathData="M3 6h18v2H3zM7 9h2v8H7zM11 9h2v8h-2zM15 9h2v8h-2zM5 4h14v2H5zM9 2h6v2H9z" />
-</vector>
+        android:pathData="M9 3c0 -0.55 0.45 -1 1 -1h4c0.55 0 1 0.45 1 1v1h5v2H4V4h5V3z" />
 
+    <!-- Trash can body -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M5 6h14l-1.2 14.4c-0.1 1.1 -1 1.6 -2 1.6H8.2c-1 0 -1.9 -0.5 -2 -1.6L5 6z" />
+
+    <!-- Vertical bars (thinner) -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M10 9h1v9h-1zM13 9h1v9h-1z" />
+</vector>

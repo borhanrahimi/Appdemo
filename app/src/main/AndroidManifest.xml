@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="edu.utsa.cs3443.picpick" >
+    package="edu.utsa.cs3443.picpick">
 
     <application
         android:allowBackup="true"
@@ -12,22 +12,30 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.PicPick"
-        tools:targetApi="31" >
-        <!-- Main Activity (Home Screen) -->
+        tools:targetApi="31">
+
+        <!-- Entry point -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.PicPick" >
+            android:theme="@style/Theme.PicPick">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <!-- Gallery Activity (Screen for Viewing Images) -->
+
+        <!-- Screens -->
+        <activity android:name=".HomeActivity" android:exported="false" />
         <activity android:name=".GalleryActivity" />
-        <!-- Folder Activity -->
         <activity android:name=".FolderActivity" />
+        <activity android:name=".TrashActivity" android:exported="false" />
+        <activity android:name=".KeepActivity" android:exported="false" />
+        <activity android:name=".SkipActivity" android:exported="false" />
+
+        <!-- Fullscreen viewer for image previews -->
+        <activity android:name=".FullscreenActivity" />
+
     </application>
 
 </manifest>
