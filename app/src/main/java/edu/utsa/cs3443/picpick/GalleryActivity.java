@@ -32,7 +32,7 @@ public class GalleryActivity extends AppCompatActivity {
 
         // Set photo count
         TextView photoCount = findViewById(R.id.photoCount);
-        photoCount.setText("Unassigned photos: " + unassignedPhotos.size());
+        photoCount.setText(unassignedPhotos.size() + " Photos");
 
         // Set up grid
         gridView = findViewById(R.id.gridGallery);
