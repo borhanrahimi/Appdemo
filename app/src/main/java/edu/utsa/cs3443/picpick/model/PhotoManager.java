@@ -122,4 +122,14 @@ public class PhotoManager {
             e.printStackTrace();
         }
     }
+
+    // 🔁 Move skipped photos back to unassigned
+    public static void moveSkippedToUnassigned(Context context) {
+        List<Photo> skippedPhotos = getPhotosByStatus(Photo.Status.SKIP);
+        for (Photo p : skippedPhotos) {
+            p.setStatus(Photo.Status.UNASSIGNED);
+        }
+        saveStatuses(context);
+        categorizePhotos(); // Refresh status map
+    }
 }

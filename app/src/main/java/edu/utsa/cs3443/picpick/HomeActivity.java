@@ -23,6 +23,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private Photo lastUndoPhoto = null;
     private Photo.Status lastUndoStatus = null;
+    private boolean revisitingSkipped = false; // 🔁 Flag to track skip round
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,11 +34,9 @@ public class HomeActivity extends AppCompatActivity {
         unassignedPhotos = PhotoManager.getUnassignedPhotos();
         imageViewMain = findViewById(R.id.imageViewMain);
 
-        // ✅ Undo button now correctly cast as ImageButton
         ImageButton btnUndo = findViewById(R.id.btnUndo);
         btnUndo.setOnClickListener(v -> performUndo());
 
-        // Handle incoming image path (from Gallery)
         String selectedPath = getIntent().getStringExtra("imagePath");
         if (selectedPath != null) {
             for (int i = 0; i < unassignedPhotos.size(); i++) {
@@ -58,7 +57,7 @@ public class HomeActivity extends AppCompatActivity {
         ImageButton btnHome = findViewById(R.id.btnHome);
         ImageButton btnFolder = findViewById(R.id.btnFolder);
 
-        btnHome.setImageResource(R.drawable.ic_home_dark); // highlight current
+        btnHome.setImageResource(R.drawable.ic_home_dark);
 
         btnGallery.setOnClickListener(v -> startActivity(new Intent(this, GalleryActivity.class)));
         btnFolder.setOnClickListener(v -> startActivity(new Intent(this, FolderActivity.class)));
@@ -74,7 +73,17 @@ public class HomeActivity extends AppCompatActivity {
 
             // Reload list and adjust index
             unassignedPhotos = PhotoManager.getUnassignedPhotos();
-            if (currentIndex >= unassignedPhotos.size()) {
+            if (unassignedPhotos.isEmpty()) {
+                List<Photo> skipped = PhotoManager.getPhotosByStatus(Photo.Status.SKIP);
+                if (!skipped.isEmpty()) {
+                    PhotoManager.moveSkippedToUnassigned(this);
+                    unassignedPhotos = PhotoManager.getUnassignedPhotos();
+                    currentIndex = 0;
+                    Toast.makeText(this, "Reviewing skipped photos again", Toast.LENGTH_SHORT).show();
+                } else {
+                    showCurrentPhoto(); // still empty
+                }
+            } else if (currentIndex >= unassignedPhotos.size()) {
                 currentIndex = Math.max(0, unassignedPhotos.size() - 1);
             }
 
@@ -96,8 +105,19 @@ public class HomeActivity extends AppCompatActivity {
                 }
             }
 
+            // 🔁 If photo isn’t found in unassigned, check all photos
             if (!found) {
-                currentIndex = Math.max(0, currentIndex - 1);
+                List<Photo> allPhotos = PhotoManager.getAllPhotos();
+                for (int i = 0; i < allPhotos.size(); i++) {
+                    if (allPhotos.get(i).getFilePath().equals(lastUndoPhoto.getFilePath())) {
+                        if (lastUndoStatus == Photo.Status.UNASSIGNED) {
+                            unassignedPhotos = PhotoManager.getUnassignedPhotos();
+                            currentIndex = unassignedPhotos.indexOf(lastUndoPhoto);
+                        }
+                        found = true;
+                        break;
+                    }
+                }
             }
 
             showCurrentPhoto();
@@ -126,4 +146,5 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 }
+
 
