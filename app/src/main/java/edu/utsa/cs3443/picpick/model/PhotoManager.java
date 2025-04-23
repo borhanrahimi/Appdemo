@@ -3,6 +3,8 @@ package edu.utsa.cs3443.picpick.model;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,7 +38,6 @@ public class PhotoManager {
         }
     }
 
-    // Categorize photos by their status
     private static void categorizePhotos() {
         statusMap.clear();
         for (Photo.Status status : Photo.Status.values()) {
@@ -64,9 +65,11 @@ public class PhotoManager {
         return photoMap.get(filePath);
     }
 
+    // AUTO EXPORT CSV ON STATUS CHANGE
     public static void setPhotoStatus(Photo photo, Photo.Status newStatus, Context context) {
         photo.setStatus(newStatus);
-        saveStatuses(context);
+        saveStatuses(context);            // Save to SharedPreferences
+        saveStatusesToCSV(context);       // Save to CSV automatically
         categorizePhotos();
     }
 
@@ -94,11 +97,29 @@ public class PhotoManager {
             p.setStatus(Photo.Status.UNASSIGNED);
         }
         saveStatuses(context);
+        saveStatusesToCSV(context);  // Also export CSV after reset
         categorizePhotos();
     }
 
     public static void forceReload(Context context) {
         isLoaded = false;
         loadPhotos(context);
+    }
+
+    // CSV Export method
+    public static void saveStatusesToCSV(Context context) {
+        File file = new File(context.getFilesDir(), "photo_statuses.csv");
+
+        try (FileWriter writer = new FileWriter(file)) {
+            writer.write("fileName,status\n");
+
+            for (Photo p : photoMap.values()) {
+                writer.write(p.getFilePath() + "," + p.getStatus().name() + "\n");
+            }
+
+            writer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

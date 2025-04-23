@@ -53,6 +53,5 @@ public class FolderActivity extends AppCompatActivity {
         int trashCount = PhotoManager.getPhotosByStatus(Photo.Status.TRASH).size();
         int skipCount = PhotoManager.getPhotosByStatus(Photo.Status.SKIP).size();
         folderCounts.setText("Keep: " + keepCount + "   Trash: " + trashCount + "   Skip: " + skipCount);
-
     }
 }

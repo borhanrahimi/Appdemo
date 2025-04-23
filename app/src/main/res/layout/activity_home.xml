@@ -40,7 +40,7 @@
             android:adjustViewBounds="true"
             android:scaleType="fitCenter" />
 
-        <!-- Floating Buttons with Labels -->
+        <!-- Main Action Buttons (Trash, Skip, Keep, Undo) -->
         <LinearLayout
             android:id="@+id/buttonOverlay"
             android:layout_width="match_parent"
@@ -102,6 +102,32 @@
                     android:layout_marginTop="4dp" />
             </LinearLayout>
 
+            <!-- ✅ Undo -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageButton
+                    android:id="@+id/btnUndo"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:background="@drawable/bg_dark_circle"
+                    android:scaleType="centerInside"
+                    android:contentDescription="Undo"
+                    android:src="@drawable/ic_undo" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Undo"
+                    android:textColor="#000000"
+                    android:textStyle="bold"
+                    android:layout_marginTop="4dp" />
+            </LinearLayout>
+
             <!-- Keep -->
             <LinearLayout
                 android:layout_width="0dp"
@@ -127,6 +153,8 @@
                     android:textStyle="bold"
                     android:layout_marginTop="4dp" />
             </LinearLayout>
+
+
         </LinearLayout>
     </FrameLayout>
 

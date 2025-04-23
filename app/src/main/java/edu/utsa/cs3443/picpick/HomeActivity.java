@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -20,16 +21,23 @@ public class HomeActivity extends AppCompatActivity {
     private int currentIndex = 0;
     private ImageView imageViewMain;
 
+    private Photo lastUndoPhoto = null;
+    private Photo.Status lastUndoStatus = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        PhotoManager.loadPhotos(this); // Ensure photos are loaded
+        PhotoManager.loadPhotos(this);
         setContentView(R.layout.activity_home);
 
         unassignedPhotos = PhotoManager.getUnassignedPhotos();
         imageViewMain = findViewById(R.id.imageViewMain);
 
-        // ✅ Get selected image path from intent (if any)
+        // ✅ Undo button now correctly cast as ImageButton
+        ImageButton btnUndo = findViewById(R.id.btnUndo);
+        btnUndo.setOnClickListener(v -> performUndo());
+
+        // Handle incoming image path (from Gallery)
         String selectedPath = getIntent().getStringExtra("imagePath");
         if (selectedPath != null) {
             for (int i = 0; i < unassignedPhotos.size(); i++) {
@@ -42,7 +50,6 @@ public class HomeActivity extends AppCompatActivity {
 
         showCurrentPhoto();
 
-        // Bottom nav
         findViewById(R.id.btnKeep).setOnClickListener(v -> handleChoice(Photo.Status.KEEP));
         findViewById(R.id.btnTrash).setOnClickListener(v -> handleChoice(Photo.Status.TRASH));
         findViewById(R.id.btnSkip).setOnClickListener(v -> handleChoice(Photo.Status.SKIP));
@@ -51,18 +58,55 @@ public class HomeActivity extends AppCompatActivity {
         ImageButton btnHome = findViewById(R.id.btnHome);
         ImageButton btnFolder = findViewById(R.id.btnFolder);
 
-        btnHome.setImageResource(R.drawable.ic_home_dark); // highlight
+        btnHome.setImageResource(R.drawable.ic_home_dark); // highlight current
 
         btnGallery.setOnClickListener(v -> startActivity(new Intent(this, GalleryActivity.class)));
         btnFolder.setOnClickListener(v -> startActivity(new Intent(this, FolderActivity.class)));
     }
 
-    private void handleChoice(Photo.Status status) {
+    private void handleChoice(Photo.Status newStatus) {
         if (currentIndex < unassignedPhotos.size()) {
             Photo photo = unassignedPhotos.get(currentIndex);
-            PhotoManager.setPhotoStatus(photo, status, this);
-            currentIndex++;
+            lastUndoPhoto = photo;
+            lastUndoStatus = photo.getStatus();
+
+            PhotoManager.setPhotoStatus(photo, newStatus, this);
+
+            // Reload list and adjust index
+            unassignedPhotos = PhotoManager.getUnassignedPhotos();
+            if (currentIndex >= unassignedPhotos.size()) {
+                currentIndex = Math.max(0, unassignedPhotos.size() - 1);
+            }
+
             showCurrentPhoto();
+        }
+    }
+
+    private void performUndo() {
+        if (lastUndoPhoto != null && lastUndoStatus != null) {
+            PhotoManager.setPhotoStatus(lastUndoPhoto, lastUndoStatus, this);
+            unassignedPhotos = PhotoManager.getUnassignedPhotos();
+
+            boolean found = false;
+            for (int i = 0; i < unassignedPhotos.size(); i++) {
+                if (unassignedPhotos.get(i).getFilePath().equals(lastUndoPhoto.getFilePath())) {
+                    currentIndex = i;
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found) {
+                currentIndex = Math.max(0, currentIndex - 1);
+            }
+
+            showCurrentPhoto();
+            Toast.makeText(this, "Undo successful", Toast.LENGTH_SHORT).show();
+
+            lastUndoPhoto = null;
+            lastUndoStatus = null;
+        } else {
+            Toast.makeText(this, "Nothing to undo", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -82,3 +126,4 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 }
+
