@@ -28,9 +28,21 @@ public class HomeActivity extends AppCompatActivity {
 
         unassignedPhotos = PhotoManager.getUnassignedPhotos();
         imageViewMain = findViewById(R.id.imageViewMain);
-        showCurrentPhoto();
-        // bottom nav
 
+        // ✅ Get selected image path from intent (if any)
+        String selectedPath = getIntent().getStringExtra("imagePath");
+        if (selectedPath != null) {
+            for (int i = 0; i < unassignedPhotos.size(); i++) {
+                if (unassignedPhotos.get(i).getFilePath().equals(selectedPath)) {
+                    currentIndex = i;
+                    break;
+                }
+            }
+        }
+
+        showCurrentPhoto();
+
+        // Bottom nav
         findViewById(R.id.btnKeep).setOnClickListener(v -> handleChoice(Photo.Status.KEEP));
         findViewById(R.id.btnTrash).setOnClickListener(v -> handleChoice(Photo.Status.TRASH));
         findViewById(R.id.btnSkip).setOnClickListener(v -> handleChoice(Photo.Status.SKIP));
