@@ -25,7 +25,7 @@ public class TrashActivity extends AppCompatActivity {
         List<Photo> trashPhotos = PhotoManager.getPhotosByStatus(Photo.Status.TRASH);
         gridView.setAdapter(new ImageAdapter(this, trashPhotos));
 
-        // ✅ Add total count
+        // Add total count
         TextView photoCount = findViewById(R.id.photoCount);
         photoCount.setText("Total photos: " + trashPhotos.size());
 

@@ -123,7 +123,7 @@ public class PhotoManager {
         }
     }
 
-    // 🔁 Move skipped photos back to unassigned
+    //  Move skipped photos back to unassigned
     public static void moveSkippedToUnassigned(Context context) {
         List<Photo> skippedPhotos = getPhotosByStatus(Photo.Status.SKIP);
         for (Photo p : skippedPhotos) {

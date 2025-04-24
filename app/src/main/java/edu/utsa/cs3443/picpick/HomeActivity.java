@@ -23,7 +23,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private Photo lastUndoPhoto = null;
     private Photo.Status lastUndoStatus = null;
-    private boolean revisitingSkipped = false; // 🔁 Flag to track skip round
+    private boolean revisitingSkipped = false; // Flag to track skip round
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
